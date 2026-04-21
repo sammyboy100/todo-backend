@@ -4,26 +4,32 @@ const mongoose = require('mongoose');
 
 const fastify = Fastify({ logger: true });
 
-// 1. Conexión a Base de Datos de MongoDB Atlas
-// Usamos la URI que guardaste en el archivo .env
+// 1. Conexion a Base de Datos de MongoDB Atlas
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('✅ Conexión exitosa a MongoDB Atlas'))
-  .catch(err => console.error('❌ Error al conectar a BD:', err));
+  .then(() => console.log('Conexion exitosa a MongoDB Atlas'))
+  .catch(err => console.error('Error al conectar a BD:', err));
 
-// 2. Registro de rutas
-// El prefijo '/api/todos' hace que todas las rutas dentro de ese archivo
-// empiecen con esa dirección automáticamente.
+// 2. Ruta de bienvenida para el root
+fastify.get('/', async (request, reply) => {
+  return { 
+    mensaje: "Laboratorio: Implementar hasta el punto 3. Fase 2: Despliegue del Backend (Render)",
+    estado: "Online",
+    estudiante: "Daniel",
+    repositorio: "github.com/sammyboy100/todo-backend"
+  };
+});
+
+// 3. Registro de rutas de la API
 fastify.register(require('./src/routes/todo.routes'), { prefix: '/api/todos' });
 
-// 3. Inicio del servidor
+// 4. Inicio del servidor
 const start = async () => {
     try { 
-        // Usamos el puerto definido en .env o el 3000 por defecto
         await fastify.listen({ 
             port: process.env.PORT || 3000, 
             host: '0.0.0.0' 
         }); 
-        console.log(`🚀 Servidor Nivel 3 corriendo en http://localhost:${process.env.PORT || 3000}`);
+        console.log(`Servidor activo en puerto ${process.env.PORT || 3000}`);
     } 
     catch (err) { 
         fastify.log.error(err); 
